@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict, ValidationError
+import logging
 
 import torch
 from torch import nn
@@ -24,17 +25,17 @@ class Config(BaseModel):
 
 class Trainer:
     def __init__(self, config: Config) -> None:
-        self.batch_size = config.batch_size
-        self.epochs = config.epochs
-        self.lr = config.lr
-        self.momentum = config.momentum
-        self.seed = config.seed
-        self.log_dir = config.log_dir
+        self.config = config
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
         self.summaryWriter = config.summaryWriter
 
     def _optimizer(self, model: nn.Module, **kwargs) -> optim.Optimizer:
         return optim.SGD(
-            model.parameters(), lr=self.lr, momentum=self.momentum, **kwargs
+            model.parameters(),
+            lr=self.config.lr,
+            momentum=self.config.momentum,
+            **kwargs,
         )
 
     def train_one_epoch(
@@ -113,7 +114,7 @@ class Trainer:
     ):
         optimizer = self._optimizer(model)
         try:
-            for epoch in range(1, self.epochs + 1):
+            for epoch in range(1, self.config.epochs + 1):
                 self.train_one_epoch(model, device, train_loader, optimizer, epoch)
                 self.evaluate(model, device, test_loader, epoch, model_name)
         except Exception as e:
