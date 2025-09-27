@@ -32,15 +32,17 @@ class Trainer:
         self.log_dir = config.log_dir
         self.summaryWriter = config.summaryWriter
 
-    def _optimizer(self, model: nn.Module) -> optim.SGD:
-        return optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
+    def _optimizer(self, model: nn.Module, **kwargs) -> optim.Optimizer:
+        return optim.SGD(
+            model.parameters(), lr=self.lr, momentum=self.momentum, **kwargs
+        )
 
     def train_one_epoch(
         self,
         model: nn.Module,
         device: torch.device,
         train_loader: torch.utils.data.DataLoader,
-        optimizer: optim.SGD,
+        optimizer: optim.Optimizer,
         epoch: int,
     ):
         model.train()
