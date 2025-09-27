@@ -7,7 +7,12 @@ authors = [
     { name = "bensooraj", email = "bensooraj@users.noreply.github.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pydantic>=2.11.9",
+    "torch>=2.8.0",
+    "torchvision>=0.23.0",
+    "tqdm>=4.67.1",
+]
 
 [project.scripts]
 pytorch-mnist-play = "pytorch_mnist_play:main"
