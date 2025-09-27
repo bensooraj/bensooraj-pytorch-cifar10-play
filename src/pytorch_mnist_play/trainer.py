@@ -3,6 +3,7 @@ import logging
 
 import torch
 from torch import nn
+from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
@@ -31,12 +32,14 @@ class Trainer:
         self.summaryWriter = config.summaryWriter
 
     def _optimizer(self, model: nn.Module, **kwargs) -> optim.Optimizer:
-        return optim.SGD(
+        optimizer = optim.SGD(
             model.parameters(),
             lr=self.config.lr,
             momentum=self.config.momentum,
             **kwargs,
         )
+        self.scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+        return optimizer
 
     def train_one_epoch(
         self,
@@ -60,6 +63,7 @@ class Trainer:
 
             pbar.set_postfix(loss=f"{loss.item():.4f}", batch_id=batch_idx)
         pbar.close()
+        # self.scheduler.step()
 
     @torch.no_grad()
     def evaluate(
