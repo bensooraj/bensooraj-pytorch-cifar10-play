@@ -88,12 +88,11 @@ class Trainer:
         test_loss_average = test_loss_cumulative / dataset_size
         accuracy = 100.0 * correct / dataset_size
 
-        # match notebook's use of add_scalars with dicts
         self.summaryWriter.add_scalars(
-            "Average Loss", {model_name: test_loss_average}, global_step=epoch
+            "Metrics/Loss", {model_name: test_loss_average}, global_step=epoch
         )
         self.summaryWriter.add_scalars(
-            "Accuracy", {model_name: accuracy}, global_step=epoch
+            "Metrics/Accuracy", {model_name: accuracy}, global_step=epoch
         )
         self.summaryWriter.flush()
 
