@@ -31,7 +31,6 @@ class Trainer:
         self.seed = config.seed
         self.log_dir = config.log_dir
         self.summaryWriter = config.summaryWriter
-        pass
 
     def _optimizer(self, model: nn.Module) -> optim.SGD:
         return optim.SGD(model.parameters(), lr=self.lr, momentum=self.momentum)
