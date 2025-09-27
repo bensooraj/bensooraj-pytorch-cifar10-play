@@ -31,6 +31,13 @@ class Trainer:
         self.logger.setLevel(logging.INFO)
         self.summaryWriter = config.summaryWriter
 
+    def _log_metrics(self, metrics: dict, epoch: int, model_name: str):
+        for key, value in metrics.items():
+            self.summaryWriter.add_scalars(
+                f"Metrics/{key}", {model_name: value}, global_step=epoch
+            )
+        self.summaryWriter.flush()
+
     def _optimizer(self, model: nn.Module, **kwargs) -> optim.Optimizer:
         optimizer = optim.SGD(
             model.parameters(),
@@ -95,13 +102,9 @@ class Trainer:
         test_loss_average = test_loss_cumulative / dataset_size
         accuracy = 100.0 * correct / dataset_size
 
-        self.summaryWriter.add_scalars(
-            "Metrics/Loss", {model_name: test_loss_average}, global_step=epoch
+        self._log_metrics(
+            {"Loss": test_loss_average, "Accuracy": accuracy}, epoch, model_name
         )
-        self.summaryWriter.add_scalars(
-            "Metrics/Accuracy", {model_name: accuracy}, global_step=epoch
-        )
-        self.summaryWriter.flush()
 
         print(
             f"[{model_name}] Epoch {epoch:02d} - Loss: {test_loss_average:.4f}, Accuracy: {correct}/{dataset_size} ({accuracy:.2f}%)"
