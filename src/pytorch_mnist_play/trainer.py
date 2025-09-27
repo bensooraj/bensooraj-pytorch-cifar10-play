@@ -101,7 +101,14 @@ class Trainer:
         )
         return test_loss_average, accuracy
 
-    def fit(self, model: nn.Module, device, train_loader, test_loader, model_name: str):
+    def fit(
+        self,
+        model: nn.Module,
+        device: torch.device,
+        train_loader: torch.utils.data.DataLoader,
+        test_loader: torch.utils.data.DataLoader,
+        model_name: str,
+    ):
         optimizer = self._optimizer(model)
         try:
             for epoch in range(1, self.epochs + 1):
