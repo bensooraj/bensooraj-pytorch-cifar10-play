@@ -6,7 +6,6 @@ class ModelV1(nn.Module):
     def __init__(self):
         super(ModelV1, self).__init__()
 
-        self.name = "ModelV1"
         # Layer 01
         self.layer01 = nn.Sequential(nn.Conv2d(1, 16, 3, padding=1), nn.ReLU())
         # Layer 02
@@ -58,4 +57,7 @@ class ModelV1(nn.Module):
         x = self.layer08(x)
 
         x = x.view(-1, 10)
-        return F.log_softmax(x)
+        return F.log_softmax(x, dim=1)
+
+    def name(self) -> str:
+        return self.__class__.__name__

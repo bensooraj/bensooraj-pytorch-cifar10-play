@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from pytorch-mnist-play!")
+from .trainer import Config, Trainer
+
+__all__ = ["Config", "Trainer"]
