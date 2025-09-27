@@ -70,6 +70,7 @@ class Trainer:
         assert isinstance(test_loader.dataset, Sized), "Dataset must implement __len__"
         model.eval()
 
+        dataset_size = len(test_loader.dataset)
         test_loss_cumulative = 0.0
         correct = 0
 
@@ -84,8 +85,8 @@ class Trainer:
             pred: torch.Tensor = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
-        test_loss_average = test_loss_cumulative / len(test_loader.dataset)
-        accuracy = 100.0 * correct / len(test_loader.dataset)
+        test_loss_average = test_loss_cumulative / dataset_size
+        accuracy = 100.0 * correct / dataset_size
 
         # match notebook's use of add_scalars with dicts
         self.summaryWriter.add_scalars(
@@ -97,7 +98,7 @@ class Trainer:
         self.summaryWriter.flush()
 
         print(
-            f"[{model_name}] Epoch {epoch:02d} - Loss: {test_loss_average:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)"
+            f"[{model_name}] Epoch {epoch:02d} - Loss: {test_loss_average:.4f}, Accuracy: {correct}/{dataset_size} ({accuracy:.2f}%)"
         )
         return test_loss_average, accuracy
 
