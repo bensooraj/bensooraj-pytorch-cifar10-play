@@ -44,7 +44,7 @@ class Trainer:
         epoch: int,
     ):
         model.train()
-        pbar = tqdm(train_loader, leave=False, desc=f"Epoch {epoch}")
+        pbar = tqdm(train_loader, leave=True, desc=f"Epoch {epoch}")
 
         for batch_idx, (data, target) in enumerate(pbar):
             data, target = data.to(device), target.to(device)
@@ -56,6 +56,7 @@ class Trainer:
             optimizer.step()
 
             pbar.set_postfix(loss=f"{loss.item():.4f}", batch_id=batch_idx)
+        pbar.close()
 
     @torch.no_grad()
     def evaluate(
