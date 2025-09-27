@@ -108,4 +108,4 @@ class Trainer:
                 self.train_one_epoch(model, device, train_loader, optimizer, epoch)
                 self.evaluate(model, device, test_loader, epoch, model_name)
         except Exception as e:
-            print(f"An unexpected error occurred during fit: {e}")
+            print(f"An unexpected error occurred during fit: {type(e).__name__}: {e}")
