@@ -27,9 +27,11 @@ class Config(BaseModel):
 class Trainer:
     def __init__(self, config: Config) -> None:
         self.config = config
+        # Tensorboard writer
+        self.summaryWriter = config.summaryWriter
+        # Logging
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
-        self.summaryWriter = config.summaryWriter
 
     def _log_metrics(self, metrics: dict, epoch: int, model_name: str):
         for key, value in metrics.items():
@@ -106,7 +108,7 @@ class Trainer:
             {"Loss": test_loss_average, "Accuracy": accuracy}, epoch, model_name
         )
 
-        print(
+        self.logger.info(
             f"[{model_name}] Epoch {epoch:02d} - Loss: {test_loss_average:.4f}, Accuracy: {correct}/{dataset_size} ({accuracy:.2f}%)"
         )
         return test_loss_average, accuracy
@@ -124,5 +126,9 @@ class Trainer:
             for epoch in range(1, self.config.epochs + 1):
                 self.train_one_epoch(model, device, train_loader, optimizer, epoch)
                 self.evaluate(model, device, test_loader, epoch, model_name)
+        except RuntimeError as e:
+            self.logger.error(f"RuntimeError during fit: {e}")
+        except ValueError as e:
+            self.logger.error(f"ValueError during fit: {e}")
         except Exception as e:
-            print(f"An unexpected error occurred during fit: {type(e).__name__}: {e}")
+            self.logger.error(f"Unexpected error during fit: {type(e).__name__}: {e}")
