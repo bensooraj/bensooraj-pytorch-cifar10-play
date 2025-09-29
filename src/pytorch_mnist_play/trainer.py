@@ -18,6 +18,7 @@ class Config(BaseModel):
     batch_size: int = 128
     epochs: int = 20
     lr: float = 0.01
+    enable_lr_scheduler: bool = False
     momentum: float = 0.9
     seed: int = 1
     log_dir: str = "logs/mnist"
@@ -47,7 +48,7 @@ class Trainer:
             momentum=self.config.momentum,
             **kwargs,
         )
-        self.scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+        self.scheduler = StepLR(optimizer, step_size=6, gamma=0.1)
         return optimizer
 
     def train_one_epoch(
@@ -80,7 +81,8 @@ class Trainer:
 
             pbar.set_postfix(loss=f"{loss.item():.4f}", batch_id=batch_idx)
         pbar.close()
-        # self.scheduler.step()
+        if self.config.enable_lr_scheduler:
+            self.scheduler.step()
 
         accuracy = 100.0 * correct / dataset_size
         self._log_metrics(
