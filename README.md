@@ -1,4 +1,4 @@
-# PyTorch MNIST Models
+# PyTorch CIFAR10 Models
 
 ## Observations
 
