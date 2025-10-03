@@ -20,6 +20,8 @@ class ModelV1(nn.Module):
                 bias=True,
             ),
             nn.ReLU(),
+            nn.BatchNorm2d(16),
+            nn.Dropout(self.DROPOUT_VALUE),
             # Layer 02
             nn.Conv2d(
                 in_channels=16,
@@ -48,6 +50,8 @@ class ModelV1(nn.Module):
             # Layer 01
             nn.Conv2d(64, 128, 3, padding=0),
             nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.Dropout(self.DROPOUT_VALUE),
             # Layer 02 | Depthwise
             nn.Conv2d(128, 128, 3, padding=1, groups=128),
             nn.ReLU(),
@@ -62,6 +66,8 @@ class ModelV1(nn.Module):
             # Layer 01
             nn.Conv2d(128, 32, 3, padding=1),
             nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.Dropout(self.DROPOUT_VALUE),
             # Layer 02 | Dilated Convolution
             nn.Conv2d(32, 32, 3, padding=0, dilation=2),
             nn.ReLU(),
@@ -80,7 +86,6 @@ class ModelV1(nn.Module):
             nn.Conv2d(32, 10, 3, padding=0),
             nn.ReLU(),
             nn.BatchNorm2d(10),
-            nn.Dropout(self.DROPOUT_VALUE),
         )
         # Block 05
         self.block05 = nn.Sequential(nn.AdaptiveAvgPool2d((1, 1)))
