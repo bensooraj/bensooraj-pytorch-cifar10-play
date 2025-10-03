@@ -419,7 +419,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pytorch-mnist-play"
+name = "pytorch-play"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

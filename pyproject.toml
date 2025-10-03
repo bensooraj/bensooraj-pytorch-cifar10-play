@@ -1,5 +1,5 @@
 [project]
-name = "pytorch-mnist-play"
+name = "pytorch-play"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pytorch-mnist-play = "pytorch_mnist_play:main"
+pytorch-play = "pytorch_play:main"
 
 [build-system]
 requires = ["uv_build>=0.8.4,<0.9.0"]
