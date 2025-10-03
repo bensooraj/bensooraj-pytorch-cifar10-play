@@ -6,55 +6,65 @@ class ModelV1(nn.Module):
     def __init__(self):
         super(ModelV1, self).__init__()
 
-        # Layer 01
-        self.layer01 = nn.Sequential(nn.Conv2d(1, 16, 3, padding=1), nn.ReLU())
-        # Layer 02
-        self.layer02 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=1),
+        self.DROPOUT_VALUE = 0.10
+
+        # Block 01 | Entry
+        self.block01 = nn.Sequential(
+            # Layer 01
+            nn.Conv2d(32, 32, 1, padding=0),
             nn.ReLU(),
-            nn.BatchNorm2d(16),
-            nn.MaxPool2d(2, 2),
-        )
-        # Layer 03
-        self.layer03 = nn.Sequential(
-            nn.Conv2d(16, 32, 3, padding=1),
+            # Layer 02
+            nn.Conv2d(32, 32, 3, padding=0),
             nn.ReLU(),
-            nn.BatchNorm2d(32),
-            nn.Dropout(0.25),
-        )
-        # Layer 04
-        self.layer04 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1),
+            # Layer 03
+            nn.Conv2d(32, 64, 1, padding=0),
             nn.ReLU(),
-            nn.BatchNorm2d(32),
-            nn.MaxPool2d(2, 2),
         )
-        # Layer 05
-        self.layer05 = nn.Sequential(
-            nn.Conv2d(32, 16, 3),
+        # Block 01 | Depthwise Separable
+        self.block02 = nn.Sequential(
+            # Layer 01
+            nn.Conv2d(64, 256, 1, padding=0),
             nn.ReLU(),
-            nn.BatchNorm2d(16),
-        )
-        # Layer 06
-        self.layer06 = nn.Sequential(
-            nn.Conv2d(16, 16, 3),
+            # Layer 02 | Depthwise
+            nn.Conv2d(256, 256, 3, padding=1, groups=256),
             nn.ReLU(),
-            nn.BatchNorm2d(16),
+            # Layer 03 | Pointwise
+            nn.Conv2d(256, 128, 1, padding=0),
+            nn.ReLU(),
         )
-        # Layer 07
-        self.layer07 = nn.Sequential(nn.Conv2d(16, 10, 3), nn.ReLU())
-        # Layer 08
-        self.layer08 = nn.Sequential(nn.AvgPool2d(1))
+        # Block 03
+        self.block03 = nn.Sequential(
+            # Layer 01
+            nn.Conv2d(128, 64, 1, padding=0),
+            nn.ReLU(),
+            # Layer 02 | Dilated Convolution
+            nn.Conv2d(64, 64, 3, padding=0, dilation=2),
+            nn.ReLU(),
+            # Layer 03
+            nn.Conv2d(64, 128, 1, padding=0),
+            nn.ReLU(),
+        )
+        # Block 04
+        self.block04 = nn.Sequential(
+            # Layer 01
+            nn.Conv2d(128, 64, 1, padding=0),
+            nn.ReLU(),
+            # Layer 02
+            nn.Conv2d(64, 64, 3, padding=0),
+            nn.ReLU(),
+            # Layer 03
+            nn.Conv2d(64, 128, 1, padding=0),
+            nn.ReLU(),
+        )
+        # Block 05
+        self.block05 = nn.Sequential(nn.AvgPool2d(1))
 
     def forward(self, x):
-        x = self.layer01(x)
-        x = self.layer02(x)
-        x = self.layer03(x)
-        x = self.layer04(x)
-        x = self.layer05(x)
-        x = self.layer06(x)
-        x = self.layer07(x)
-        x = self.layer08(x)
+        x = self.block01(x)
+        x = self.block02(x)
+        x = self.block03(x)
+        x = self.block04(x)
+        x = self.block05(x)
 
         x = x.view(-1, 10)
         return F.log_softmax(x, dim=1)
