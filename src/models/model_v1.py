@@ -11,7 +11,7 @@ class ModelV1(nn.Module):
         # Block 01 | Entry
         self.block01 = nn.Sequential(
             # Layer 01
-            nn.Conv2d(32, 32, 1, padding=0),
+            nn.Conv2d(3, 32, 1, padding=0),
             nn.ReLU(),
             # Layer 02
             nn.Conv2d(32, 32, 3, padding=0),
