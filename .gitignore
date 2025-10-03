@@ -10,5 +10,7 @@ wheels/
 .venv
 
 data
+!src/data
+
 .ipynb_checkpoints
 Untitled.ipynb
