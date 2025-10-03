@@ -67,8 +67,20 @@ class Trainer:
         dataset_size = len(train_loader.dataset)
         correct = 0
 
-        for batch_idx, (data, target) in enumerate(pbar):
-            data, target = data.to(device), target.to(device)
+        for batch_idx, batch in enumerate(pbar):
+            if isinstance(batch, dict):
+                data, target = batch["data"], batch["target"]
+            else:
+                data, target = batch
+
+            # Assert that data and target are tensors
+            assert isinstance(data["image"], torch.Tensor), (
+                f"Expected data to be a tensor, got {type(data)}"
+            )
+            assert isinstance(target, torch.Tensor), (
+                f"Expected target to be a tensor, got {type(target)}"
+            )
+            data, target = data["image"].to(device), target.to(device)
             optimizer.zero_grad()
             output = model(data)
 
@@ -110,8 +122,28 @@ class Trainer:
         test_loss_cumulative = 0.0
         correct = 0
 
-        for data, target in test_loader:
+        for batch in test_loader:
             # data, target = data.to(device), target.to(device)
+            if isinstance(batch, dict):
+                data, target = batch["data"], batch["target"]
+            else:
+                data, target = batch
+
+            if (
+                isinstance(data, dict)
+                and "image" in data
+                and isinstance(data["image"], torch.Tensor)
+            ):
+                data = data["image"]
+
+            # Assert that data and target are tensors
+            assert isinstance(data, torch.Tensor), (
+                f"Expected data to be a tensor, got {type(data)}"
+            )
+            assert isinstance(target, torch.Tensor), (
+                f"Expected target to be a tensor, got {type(target)}"
+            )
+
             data: torch.Tensor = data.to(device)
             target: torch.Tensor = target.to(device)
 

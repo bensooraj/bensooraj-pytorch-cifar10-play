@@ -1,7 +1,19 @@
+import os
+
+os.environ["ALBUMENTATIONS_DISABLE_VERSION_CHECK"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
+
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-
 import numpy as np
+
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 class Transforms:
