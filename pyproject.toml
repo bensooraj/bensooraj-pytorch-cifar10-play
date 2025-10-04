@@ -10,7 +10,9 @@ requires-python = ">=3.12"
 dependencies = [
     "albumentations>=2.0.8",
     "pydantic>=2.11.9",
+    "tensorboard>=2.20.0",
     "torch>=2.8.0",
+    "torchsummary>=1.5.1",
     "torchvision>=0.23.0",
     "tqdm>=4.67.1",
 ]
@@ -21,3 +23,8 @@ pytorch-play = "pytorch_play:main"
 [build-system]
 requires = ["uv_build>=0.8.4,<0.9.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.30.1",
+]
